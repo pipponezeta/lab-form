@@ -594,12 +594,13 @@
     note:                 'Note aggiuntive'
   };
 
-  // Collect data
+  // Collect data as FormData with readable Italian labels
   function collectData() {
-    const data = {
-      _subject: 'Nuovo questionario – ' + (document.querySelector('[name="nome"]').value.trim() || 'Laboratorio'),
-      _template: 'table'
-    };
+    const fd = new FormData();
+    fd.append('_subject', 'Nuovo questionario – ' + (document.querySelector('[name="nome"]').value.trim() || 'Laboratorio'));
+    fd.append('_template', 'table');
+    fd.append('_captcha', 'false');
+
     const form = document.getElementById('mainForm');
     const inputs = form.querySelectorAll('input, textarea, select');
     const checkboxGroups = {};
@@ -609,17 +610,22 @@
       const label = LABELS[input.name] || input.name;
       const spanText = input.closest('.option')?.querySelector('span')?.textContent.trim();
       if (input.type === 'radio') {
-        if (input.checked) data[label] = spanText || input.value;
+        if (input.checked) fd.append(label, spanText || input.value);
       } else if (input.type === 'checkbox') {
-        if (!checkboxGroups[label]) checkboxGroups[label] = [];
-        if (input.checked) checkboxGroups[label].push(spanText || input.value);
+        if (input.checked) {
+          if (!checkboxGroups[label]) checkboxGroups[label] = [];
+          checkboxGroups[label].push(spanText || input.value);
+        }
       } else {
-        if (input.value.trim()) data[label] = input.value.trim();
+        if (input.value.trim()) fd.append(label, input.value.trim());
       }
     });
 
-    Object.assign(data, checkboxGroups);
-    return data;
+    Object.entries(checkboxGroups).forEach(([label, values]) => {
+      fd.append(label, values.join(', '));
+    });
+
+    return fd;
   }
 
   // Submit
@@ -635,13 +641,11 @@
     btn.disabled = true;
     btn.textContent = 'Invio in corso…';
 
-    const data = collectData();
-
     try {
-      const res = await fetch('https://formsubmit.co/ajax/pipponezeta@gmail.com', {
+      const res = await fetch('https://formsubmit.co/pipponezeta@gmail.com', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(data)
+        headers: { 'Accept': 'application/json' },
+        body: collectData()
       });
 
       if (!res.ok) throw new Error('network');
