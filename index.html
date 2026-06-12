@@ -569,22 +569,51 @@
     return ok;
   }
 
+  const LABELS = {
+    nome:                 'Nome del laboratorio',
+    citta:                'Città / Sede principale',
+    sedi:                 'Numero di sedi',
+    sito_esistente:       'Ha già un sito web',
+    url_attuale:          'URL sito attuale',
+    obiettivo:            'Obiettivo principale',
+    obiettivo_note:       'Note sull\'obiettivo',
+    prenotazioni_oggi:    'Come gestisce le prenotazioni oggi',
+    vuole_prenotazione:   'Vuole prenotazione online',
+    ssn:                  'Convenzioni SSN',
+    referti_oggi:         'Come consegna i referti oggi',
+    area_riservata:       'Area riservata referti sul sito',
+    lis:                  'Gestionale LIS',
+    lis_nome:             'Nome del gestionale',
+    catalogo:             'Catalogo esami sul sito',
+    esami_speciali:       'Esami da mettere in evidenza',
+    budget:               'Budget indicativo',
+    tempistiche:          'Tempistiche desiderate',
+    referente:            'Nome e cognome referente',
+    email:                'Email referente',
+    telefono:             'Telefono / WhatsApp',
+    note:                 'Note aggiuntive'
+  };
+
   // Collect data
   function collectData() {
-    const data = {};
+    const data = {
+      _subject: 'Nuovo questionario – ' + (document.querySelector('[name="nome"]').value.trim() || 'Laboratorio'),
+      _template: 'table'
+    };
     const form = document.getElementById('mainForm');
     const inputs = form.querySelectorAll('input, textarea, select');
     const checkboxGroups = {};
 
     inputs.forEach(input => {
       if (!input.name) return;
+      const label = LABELS[input.name] || input.name;
       if (input.type === 'radio') {
-        if (input.checked) data[input.name] = input.value;
+        if (input.checked) data[label] = input.value;
       } else if (input.type === 'checkbox') {
-        if (!checkboxGroups[input.name]) checkboxGroups[input.name] = [];
-        if (input.checked) checkboxGroups[input.name].push(input.value);
+        if (!checkboxGroups[label]) checkboxGroups[label] = [];
+        if (input.checked) checkboxGroups[label].push(input.value);
       } else {
-        if (input.value.trim()) data[input.name] = input.value.trim();
+        if (input.value.trim()) data[label] = input.value.trim();
       }
     });
 
