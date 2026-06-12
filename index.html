@@ -593,7 +593,7 @@
   }
 
   // Submit
-  document.getElementById('mainForm').addEventListener('submit', function(e) {
+  document.getElementById('mainForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     if (!validate()) {
       const firstInvalid = document.querySelector('.field.invalid');
@@ -601,14 +601,30 @@
       return;
     }
 
-    const data = collectData();
-    console.log('Form data:', JSON.stringify(data, null, 2));
+    const btn = document.querySelector('.btn-submit');
+    btn.disabled = true;
+    btn.textContent = 'Invio in corso…';
 
-    // Mostra success screen
-    document.getElementById('mainForm').style.display = 'none';
-    document.querySelector('.progress-bar-wrap').style.display = 'none';
-    document.getElementById('success-screen').style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const data = collectData();
+
+    try {
+      const res = await fetch('https://formspree.io/f/pipponezeta@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (!res.ok) throw new Error('network');
+
+      document.getElementById('mainForm').style.display = 'none';
+      document.querySelector('.progress-bar-wrap').style.display = 'none';
+      document.getElementById('success-screen').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'Invia questionario →';
+      alert('Errore durante l\'invio. Riprova tra qualche istante.');
+    }
   });
 
   updateProgress();
