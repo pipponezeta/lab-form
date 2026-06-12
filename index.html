@@ -607,11 +607,12 @@
     inputs.forEach(input => {
       if (!input.name) return;
       const label = LABELS[input.name] || input.name;
+      const spanText = input.closest('.option')?.querySelector('span')?.textContent.trim();
       if (input.type === 'radio') {
-        if (input.checked) data[label] = input.value;
+        if (input.checked) data[label] = spanText || input.value;
       } else if (input.type === 'checkbox') {
         if (!checkboxGroups[label]) checkboxGroups[label] = [];
-        if (input.checked) checkboxGroups[label].push(input.value);
+        if (input.checked) checkboxGroups[label].push(spanText || input.value);
       } else {
         if (input.value.trim()) data[label] = input.value.trim();
       }
