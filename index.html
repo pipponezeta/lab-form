@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Questionario Sito Web – Laboratorio Analisi</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #0F2A4A;
+      --teal:   #0B7A75;
+      --teal-light: #E6F4F3;
+      --sky:    #E8F3FB;
+      --white:  #FFFFFF;
+      --grey:   #F5F7FA;
+      --border: #D4DCE8;
+      --text:   #1A2B3C;
+      --muted:  #6B7F96;
+      --error:  #C0392B;
+      --radius: 14px;
+      --shadow: 0 4px 24px rgba(15,42,74,0.09);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--sky);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* HEADER */
+    .header {
+      background: var(--navy);
+      color: var(--white);
+      padding: 28px 24px 24px;
+      text-align: center;
+    }
+    .header .badge {
+      display: inline-block;
+      background: var(--teal);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    .header h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+    .header p {
+      font-size: 13.5px;
+      color: #A8BFCF;
+      line-height: 1.5;
+    }
+
+    /* PROGRESS */
+    .progress-bar-wrap {
+      background: var(--navy);
+      padding: 0 24px 20px;
+    }
+    .progress-track {
+      height: 4px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--teal);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+    .progress-label {
+      font-size: 11px;
+      color: #A8BFCF;
+      text-align: right;
+      margin-top: 6px;
+    }
+
+    /* FORM CONTAINER */
+    .form-wrap {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 20px 16px 0;
+    }
+
+    /* SECTION */
+    .section {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px 20px;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* FIELD */
+    .field { margin-bottom: 20px; }
+    .field:last-child { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 7px;
+      line-height: 1.4;
+    }
+    label .req { color: var(--teal); margin-left: 2px; }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      background: var(--grey);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(11,122,117,0.12);
+      background: #fff;
+    }
+    textarea { min-height: 90px; resize: vertical; }
+
+    /* RADIO & CHECKBOX GROUP */
+    .options { display: flex; flex-direction: column; gap: 9px; }
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      background: var(--grey);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .option:hover { border-color: var(--teal); background: var(--teal-light); }
+    .option input[type="radio"],
+    .option input[type="checkbox"] {
+      width: 18px; height: 18px;
+      min-width: 18px;
+      margin-top: 1px;
+      accent-color: var(--teal);
+      cursor: pointer;
+    }
+    .option span {
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--text);
+    }
+    .option.selected {
+      border-color: var(--teal);
+      background: var(--teal-light);
+    }
+
+    /* HINT */
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    /* SUBMIT */
+    .submit-wrap {
+      max-width: 540px;
+      margin: 24px auto 0;
+      padding: 0 16px;
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background: var(--teal);
+      color: #fff;
+      font-family: 'Sora', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(11,122,117,0.3);
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.01em;
+    }
+    .btn-submit:hover { background: #096461; }
+    .btn-submit:active { transform: scale(0.98); }
+
+    /* SUCCESS */
+    #success-screen {
+      display: none;
+      text-align: center;
+      padding: 60px 32px;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    .success-icon {
+      width: 72px; height: 72px;
+      background: var(--teal-light);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 36px;
+    }
+    #success-screen h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: 22px;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+    #success-screen p {
+      font-size: 14.5px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ERROR message */
+    .error-msg {
+      font-size: 12px;
+      color: var(--error);
+      margin-top: 5px;
+      display: none;
+    }
+    .field.invalid input,
+    .field.invalid select,
+    .field.invalid textarea {
+      border-color: var(--error);
+    }
+    .field.invalid .error-msg { display: block; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">Analisi Requisiti</div>
+  <h1>Questionario Sito Web<br>Laboratorio Analisi</h1>
+  <p>Rispondi alle domande per aiutarci a capire<br>cosa vuoi dal tuo nuovo sito.</p>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0% completato</div>
+</div>
+
+<form id="mainForm" novalidate>
+<div class="form-wrap">
+
+  <!-- 1. IDENTITÀ -->
+  <div class="section">
+    <div class="section-title">Identità del laboratorio</div>
+
+    <div class="field" id="field-nome">
+      <label>Nome del laboratorio <span class="req">*</span></label>
+      <input type="text" name="nome" placeholder="es. Laboratorio Analisi Rossi" />
+      <div class="error-msg">Campo obbligatorio</div>
+    </div>
+
+    <div class="field" id="field-citta">
+      <label>Città / Sede principale <span class="req">*</span></label>
+      <input type="text" name="citta" placeholder="es. Catania" />
+      <div class="error-msg">Campo obbligatorio</div>
+    </div>
+
+    <div class="field">
+      <label>Numero di sedi</label>
+      <div class="options" data-name="sedi" data-type="radio">
+        <label class="option"><input type="radio" name="sedi" value="1" /><span>Una sola sede</span></label>
+        <label class="option"><input type="radio" name="sedi" value="2-3" /><span>2–3 sedi</span></label>
+        <label class="option"><input type="radio" name="sedi" value="4+" /><span>4 o più sedi</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Ha già un sito web?</label>
+      <div class="options" data-name="sito_esistente" data-type="radio">
+        <label class="option"><input type="radio" name="sito_esistente" value="no" /><span>No, è da creare da zero</span></label>
+        <label class="option"><input type="radio" name="sito_esistente" value="si_vecchio" /><span>Sì, ma è vecchio e va rifatto</span></label>
+        <label class="option"><input type="radio" name="sito_esistente" value="si_ok" /><span>Sì, ma serve solo aggiornarlo</span></label>
+      </div>
+    </div>
+
+    <div class="field" id="field-url_attuale">
+      <label>URL del sito attuale (se esiste)</label>
+      <input type="text" name="url_attuale" placeholder="es. www.labrossi.it" />
+    </div>
+  </div>
+
+  <!-- 2. OBIETTIVI -->
+  <div class="section">
+    <div class="section-title">Obiettivo principale del sito</div>
+
+    <div class="field">
+      <label>Cosa vuoi ottenere con il nuovo sito? <span class="req">*</span></label>
+      <div class="options" data-name="obiettivo" data-type="radio">
+        <label class="option"><input type="radio" name="obiettivo" value="vetrina" /><span>Farmi trovare online (sito vetrina)</span></label>
+        <label class="option"><input type="radio" name="obiettivo" value="prenotazioni" /><span>Permettere ai pazienti di prenotare online</span></label>
+        <label class="option"><input type="radio" name="obiettivo" value="referti" /><span>Far scaricare i referti digitalmente</span></label>
+        <label class="option"><input type="radio" name="obiettivo" value="tutto" /><span>Tutte e tre le cose sopra</span></label>
+        <label class="option"><input type="radio" name="obiettivo" value="altro" /><span>Altro</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Spiegaci meglio il tuo obiettivo (opzionale)</label>
+      <textarea name="obiettivo_note" placeholder="Descrivi liberamente cosa ti aspetti dal sito…"></textarea>
+    </div>
+  </div>
+
+  <!-- 3. PAZIENTI E PRENOTAZIONI -->
+  <div class="section">
+    <div class="section-title">Pazienti e prenotazioni</div>
+
+    <div class="field">
+      <label>Come vengono gestite le prenotazioni oggi?</label>
+      <div class="options" data-name="prenotazioni_oggi" data-type="radio">
+        <label class="option"><input type="radio" name="prenotazioni_oggi" value="telefono" /><span>Solo telefono</span></label>
+        <label class="option"><input type="radio" name="prenotazioni_oggi" value="sportello" /><span>Solo di persona allo sportello</span></label>
+        <label class="option"><input type="radio" name="prenotazioni_oggi" value="misto" /><span>Telefono + sportello</span></label>
+        <label class="option"><input type="radio" name="prenotazioni_oggi" value="online" /><span>Già online (altro sistema)</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Vuole aggiungere la prenotazione online dal sito?</label>
+      <div class="options" data-name="vuole_prenotazione" data-type="radio">
+        <label class="option"><input type="radio" name="vuole_prenotazione" value="si" /><span>Sì, assolutamente</span></label>
+        <label class="option"><input type="radio" name="vuole_prenotazione" value="forse" /><span>Forse, da valutare</span></label>
+        <label class="option"><input type="radio" name="vuole_prenotazione" value="no" /><span>No, non serve</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Il laboratorio ha convenzioni SSN?</label>
+      <div class="options" data-name="ssn" data-type="radio">
+        <label class="option"><input type="radio" name="ssn" value="solo_privato" /><span>No, solo privato</span></label>
+        <label class="option"><input type="radio" name="ssn" value="ssn_e_privato" /><span>Sì, sia SSN che privato</span></label>
+        <label class="option"><input type="radio" name="ssn" value="solo_ssn" /><span>Solo SSN</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. REFERTI -->
+  <div class="section">
+    <div class="section-title">Referti e area pazienti</div>
+
+    <div class="field">
+      <label>Come vengono consegnati i referti attualmente?</label>
+      <div class="options" data-name="referti_oggi" data-type="checkbox">
+        <label class="option"><input type="checkbox" name="referti_oggi" value="cartaceo" /><span>Cartaceo al ritiro</span></label>
+        <label class="option"><input type="checkbox" name="referti_oggi" value="email" /><span>Via email</span></label>
+        <label class="option"><input type="checkbox" name="referti_oggi" value="portale" /><span>Portale esistente</span></label>
+        <label class="option"><input type="checkbox" name="referti_oggi" value="whatsapp" /><span>WhatsApp</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Vuole un'area riservata sul sito per scaricare i referti?</label>
+      <div class="options" data-name="area_riservata" data-type="radio">
+        <label class="option"><input type="radio" name="area_riservata" value="si" /><span>Sì, è una priorità</span></label>
+        <label class="option"><input type="radio" name="area_riservata" value="forse" /><span>Forse in futuro</span></label>
+        <label class="option"><input type="radio" name="area_riservata" value="no" /><span>No</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. GESTIONALE -->
+  <div class="section">
+    <div class="section-title">Gestionale interno (LIS)</div>
+
+    <div class="field">
+      <label>Il laboratorio usa un gestionale informatico?</label>
+      <div class="options" data-name="lis" data-type="radio">
+        <label class="option"><input type="radio" name="lis" value="si_integrazione" /><span>Sì, e vorrei integrarlo con il sito</span></label>
+        <label class="option"><input type="radio" name="lis" value="si_no_integrazione" /><span>Sì, ma non serve integrazione</span></label>
+        <label class="option"><input type="radio" name="lis" value="no" /><span>No, lavoriamo ancora manualmente</span></label>
+        <label class="option"><input type="radio" name="lis" value="nonSo" /><span>Non so / da valutare</span></label>
+      </div>
+    </div>
+
+    <div class="field" id="field-lis_nome">
+      <label>Nome del gestionale (se lo conosce)</label>
+      <input type="text" name="lis_nome" placeholder="es. Lifeware, Dedalus, altro…" />
+    </div>
+  </div>
+
+  <!-- 6. CATALOGO ESAMI -->
+  <div class="section">
+    <div class="section-title">Catalogo esami</div>
+
+    <div class="field">
+      <label>Vuole pubblicare un elenco degli esami disponibili?</label>
+      <div class="options" data-name="catalogo" data-type="radio">
+        <label class="option"><input type="radio" name="catalogo" value="si_prezzi" /><span>Sì, con prezzi</span></label>
+        <label class="option"><input type="radio" name="catalogo" value="si_no_prezzi" /><span>Sì, ma senza prezzi</span></label>
+        <label class="option"><input type="radio" name="catalogo" value="no" /><span>No</span></label>
+        <label class="option"><input type="radio" name="catalogo" value="nonSo" /><span>Non ho ancora deciso</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Ha esami particolari da mettere in evidenza?</label>
+      <textarea name="esami_speciali" placeholder="es. Test genetici, allergologici, check-up aziendali…"></textarea>
+    </div>
+  </div>
+
+  <!-- 7. BUDGET E TEMPISTICHE -->
+  <div class="section">
+    <div class="section-title">Budget e tempistiche</div>
+
+    <div class="field">
+      <label>Budget indicativo per il sito</label>
+      <div class="options" data-name="budget" data-type="radio">
+        <label class="option"><input type="radio" name="budget" value="sotto1k" /><span>Fino a €1.000</span></label>
+        <label class="option"><input type="radio" name="budget" value="1k-3k" /><span>€1.000 – €3.000</span></label>
+        <label class="option"><input type="radio" name="budget" value="3k-6k" /><span>€3.000 – €6.000</span></label>
+        <label class="option"><input type="radio" name="budget" value="oltre6k" /><span>Oltre €6.000</span></label>
+        <label class="option"><input type="radio" name="budget" value="nonSo" /><span>Non so ancora</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Quando vorrebbe avere il sito online?</label>
+      <div class="options" data-name="tempistiche" data-type="radio">
+        <label class="option"><input type="radio" name="tempistiche" value="1mese" /><span>Entro 1 mese</span></label>
+        <label class="option"><input type="radio" name="tempistiche" value="3mesi" /><span>Entro 3 mesi</span></label>
+        <label class="option"><input type="radio" name="tempistiche" value="6mesi" /><span>Entro 6 mesi</span></label>
+        <label class="option"><input type="radio" name="tempistiche" value="nonUrgente" /><span>Non è urgente</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. CONTATTO -->
+  <div class="section">
+    <div class="section-title">I tuoi dati di contatto</div>
+
+    <div class="field" id="field-referente">
+      <label>Nome e cognome <span class="req">*</span></label>
+      <input type="text" name="referente" placeholder="Chi compila questo modulo" />
+      <div class="error-msg">Campo obbligatorio</div>
+    </div>
+
+    <div class="field" id="field-email">
+      <label>Email <span class="req">*</span></label>
+      <input type="email" name="email" placeholder="indirizzo@email.it" />
+      <div class="error-msg">Inserisci un'email valida</div>
+    </div>
+
+    <div class="field">
+      <label>Telefono / WhatsApp</label>
+      <input type="tel" name="telefono" placeholder="+39 000 0000000" />
+    </div>
+
+    <div class="field">
+      <label>Note aggiuntive o domande</label>
+      <textarea name="note" placeholder="Qualsiasi altra cosa vuoi dirci…"></textarea>
+    </div>
+  </div>
+
+</div>
+
+<div class="submit-wrap">
+  <button type="submit" class="btn-submit">Invia questionario →</button>
+</div>
+</form>
+
+<!-- SUCCESS -->
+<div id="success-screen">
+  <div class="success-icon">✓</div>
+  <h2>Grazie!</h2>
+  <p>Abbiamo ricevuto le tue risposte.<br>Ti contatteremo entro 24 ore per discutere il progetto.</p>
+</div>
+
+<script>
+  // Progress tracking
+  function updateProgress() {
+    const required = document.querySelectorAll('[name="nome"], [name="obiettivo"], [name="referente"], [name="email"]');
+    const allFields = document.querySelectorAll('input[type="radio"], input[type="checkbox"], input[type="text"], input[type="email"], input[type="tel"], textarea');
+    let filled = 0;
+    allFields.forEach(f => {
+      if (f.type === 'radio' || f.type === 'checkbox') {
+        if (f.checked) filled++;
+      } else if (f.value.trim()) {
+        filled++;
+      }
+    });
+    const total = allFields.length;
+    const pct = Math.round((filled / total) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = pct + '% completato';
+  }
+
+  // Highlight selected options
+  document.querySelectorAll('.option input').forEach(input => {
+    input.addEventListener('change', function() {
+      const group = this.closest('[data-name]');
+      if (group) {
+        if (this.type === 'radio') {
+          group.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        }
+        this.closest('.option').classList.toggle('selected', this.checked);
+      }
+      updateProgress();
+    });
+  });
+
+  document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea').forEach(f => {
+    f.addEventListener('input', updateProgress);
+  });
+
+  // Validation
+  function validate() {
+    let ok = true;
+
+    // Nome laboratorio
+    const nome = document.querySelector('[name="nome"]');
+    const fieldNome = document.getElementById('field-nome');
+    if (!nome.value.trim()) { fieldNome.classList.add('invalid'); ok = false; }
+    else fieldNome.classList.remove('invalid');
+
+    // Referente
+    const ref = document.querySelector('[name="referente"]');
+    const fieldRef = document.getElementById('field-referente');
+    if (!ref.value.trim()) { fieldRef.classList.add('invalid'); ok = false; }
+    else fieldRef.classList.remove('invalid');
+
+    // Email
+    const email = document.querySelector('[name="email"]');
+    const fieldEmail = document.getElementById('field-email');
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+    if (!emailOk) { fieldEmail.classList.add('invalid'); ok = false; }
+    else fieldEmail.classList.remove('invalid');
+
+    // Obiettivo radio
+    const obiettivo = document.querySelector('[name="obiettivo"]:checked');
+    if (!obiettivo) ok = false;
+
+    return ok;
+  }
+
+  // Collect data
+  function collectData() {
+    const data = {};
+    const form = document.getElementById('mainForm');
+    const inputs = form.querySelectorAll('input, textarea, select');
+    const checkboxGroups = {};
+
+    inputs.forEach(input => {
+      if (!input.name) return;
+      if (input.type === 'radio') {
+        if (input.checked) data[input.name] = input.value;
+      } else if (input.type === 'checkbox') {
+        if (!checkboxGroups[input.name]) checkboxGroups[input.name] = [];
+        if (input.checked) checkboxGroups[input.name].push(input.value);
+      } else {
+        if (input.value.trim()) data[input.name] = input.value.trim();
+      }
+    });
+
+    Object.assign(data, checkboxGroups);
+    return data;
+  }
+
+  // Submit
+  document.getElementById('mainForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!validate()) {
+      const firstInvalid = document.querySelector('.field.invalid');
+      if (firstInvalid) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const data = collectData();
+    console.log('Form data:', JSON.stringify(data, null, 2));
+
+    // Mostra success screen
+    document.getElementById('mainForm').style.display = 'none';
+    document.querySelector('.progress-bar-wrap').style.display = 'none';
+    document.getElementById('success-screen').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  updateProgress();
+</script>
+</body>
+</html>
